@@ -6,7 +6,6 @@
 2. Авторизация в программе
 <div align="center"> <img width="514" height="390" alt="image" src="https://github.com/user-attachments/assets/3137ee58-bdcc-4714-ae66-24b24a3012cd" /> </div> <br>
 3. Просмотр услуг и цен
-
 4. Выбор даты 
 6. Выбор времени
 7. Просмотр своих записей
