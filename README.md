@@ -2,6 +2,7 @@
 
 ### Функционал
 1. Регистрация В программе
+<div align="center"> <img width="378" height="396" alt="Снимок экрана (27)" src="https://github.com/user-attachments/assets/fd0db803-67fc-4e87-b6ef-e4077684bf94" /> </div> <br>
 2. Авторизация в программе
 <div align="center"> <img width="514" height="390" alt="image" src="https://github.com/user-attachments/assets/3137ee58-bdcc-4714-ae66-24b24a3012cd" /> </div> <br>
 3. Просмотр услуг и цен
