@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-5">О нашем салоне</h1>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Наша философия</h3>
+            <p>Мы создаем не просто красивый маникюр, а настоящее искусство на ваших ногтях. Каждая деталь важна, каждый клиент уникален.</p>
+            
+            <h3 class="mt-4">Наши ценности</h3>
+            <ul>
+                <li>Качество и безопасность превыше всего</li>
+                <li>Индивидуальный подход к каждому клиенту</li>
+                <li>Постоянное обучение и развитие мастеров</li>
+                <li>Использование только качественных материалов</li>
+            </ul>
+        </div>
+        
+        <div class="col-md-6">
+            <h3>Контакты</h3>
+            <p><strong>Адрес:</strong> г. Москва, ул. Примерная, 123</p>
+            <p><strong>Телефон:</strong> +7 (999) 000-00-00</p>
+            <p><strong>Email:</strong> info@nailsalon.ru</p>
+            <p><strong>Режим работы:</strong></p>
+            <ul>
+                <li>Пн-Пт: 10:00 - 21:00</li>
+                <li>Сб-Вс: 10:00 - 20:00</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <h4>Хотите стать частью нашей истории?</h4>
+        <p>Запишитесь на первую процедуру и убедитесь в нашем профессионализме!</p>
+        {% if not session.user_id %}
+        <a href="{{ url_for('book_now') }}" class="btn btn-primary btn-lg">Записаться сейчас</a>
+        {% else %}
+        <a href="{{ url_for('new_appointment') }}" class="btn btn-primary btn-lg">Записаться на услугу</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

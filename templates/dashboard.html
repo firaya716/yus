@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Панель управления</h2>
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Добро пожаловать, {{ session.full_name }}!</h5>
+                <p class="card-text">Ваша роль: 
+                    {% if session.role == 'admin' %}
+                        <span class="badge bg-danger">Администратор</span>
+                    {% elif session.role == 'master' %}
+                        <span class="badge bg-warning">Мастер</span>
+                    {% else %}
+                        <span class="badge bg-info">Клиент</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            {% if session.role == 'client' %}
+            <div class="col-md-4 mb-3">
+                <div class="card text-white bg-success service-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Новая запись</h5>
+                        <p class="card-text">Записаться на услугу</p>
+                        <a href="{{ url_for('new_appointment') }}" class="btn btn-light">Записаться</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="col-md-4 mb-3">
+                <div class="card text-white bg-primary service-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Мои записи</h5>
+                        <p class="card-text">Просмотр всех записей</p>
+                        <a href="{{ url_for('appointments') }}" class="btn btn-light">Перейти</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card text-white bg-secondary service-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Услуги</h5>
+                        <p class="card-text">Список услуг салона</p>
+                        <a href="{{ url_for('services') }}" class="btn btn-light">Перейти</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card text-white bg-dark service-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Мастера</h5>
+                        <p class="card-text">Наши специалисты</p>
+                        <a href="{{ url_for('masters') }}" class="btn btn-light">Перейти</a>
+                    </div>
+                </div>
+            </div>
+
+            {% if session.role == 'admin' %}
+            <div class="col-md-4 mb-3">
+                <div class="card text-white bg-info service-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Клиенты</h5>
+                        <p class="card-text">Управление клиентами</p>
+                        <a href="{{ url_for('clients') }}" class="btn btn-light">Перейти</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Последние записи -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Последние записи</h5>
+            </div>
+            <div class="card-body">
+                {% if appointments %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                {% if session.role in ['admin', 'master'] %}
+                                <th>Клиент</th>
+                                {% endif %}
+                                {% if session.role in ['admin', 'client'] %}
+                                <th>Мастер</th>
+                                {% endif %}
+                                <th>Услуга</th>
+                                <th>Дата</th>
+                                <th>Время</th>
+                                <th>Статус</th>
+                                <th>Цена</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in appointments[:5] %}
+                            <tr>
+                                {% if session.role in ['admin', 'master'] %}
+                                <td>{{ appointment.client_name }}</td>
+                                {% endif %}
+                                {% if session.role in ['admin', 'client'] %}
+                                <td>{{ appointment.master_name }}</td>
+                                {% endif %}
+                                <td>{{ appointment.service_name }}</td>
+                                <td>{{ appointment.appointment_date }}</td>
+                                <td>{{ appointment.appointment_time }}</td>
+                                <td>
+                                    <span class="badge bg-{% if appointment.status == 'completed' %}success{% elif appointment.status == 'cancelled' %}danger{% else %}warning{% endif %}">
+                                        {{ appointment.status }}
+                                    </span>
+                                </td>
+                                <td>{{ appointment.price }} руб.</td>
+                                <td>
+                                    {% if appointment.status == 'pending' %}
+                                        {% if session.role in ['admin', 'client'] %}
+                                        <a href="{{ url_for('cancel_appointment', appointment_id=appointment.id) }}" class="btn btn-sm btn-outline-danger">Отменить</a>
+                                        {% endif %}
+                                        {% if session.role in ['admin', 'master'] %}
+                                        <a href="{{ url_for('complete_appointment', appointment_id=appointment.id) }}" class="btn btn-sm btn-outline-success">Выполнено</a>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">Записей пока нет</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

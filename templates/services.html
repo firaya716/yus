@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Услуги нашего салона</h2>
+        <p class="text-muted">Выберите услугу, которая вам подходит</p>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card service-card h-100">
+                    <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=300&fit=crop" class="card-img-top" alt="Классический маникюр">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Классический маникюр</h5>
+                        <p class="card-text">Обработка ногтей, придание формы, покрытие лаком</p>
+                        <div class="mb-2">
+                            <span class="badge bg-success fs-6">1500 руб.</span>
+                            <span class="badge bg-secondary ms-2">60 мин.</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        {% if session.role == 'client' %}
+                        <a href="{{ url_for('new_appointment') }}" class="btn btn-dark btn-sm">Записаться</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card service-card h-100">
+                    <img src="https://images.unsplash.com/photo-1577095769062-e79bf7576c2a?w=400&h=300&fit=crop" class="card-img-top" alt="Аппаратный маникюр">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Аппаратный маникюр</h5>
+                        <p class="card-text">Маникюр с использованием аппарата</p>
+                        <div class="mb-2">
+                            <span class="badge bg-success fs-6">2000 руб.</span>
+                            <span class="badge bg-secondary ms-2">90 мин.</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        {% if session.role == 'client' %}
+                        <a href="{{ url_for('new_appointment') }}" class="btn btn-dark btn-sm">Записаться</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card service-card h-100">
+                    <img src="https://images.unsplash.com/photo-1598437377527-0bf172TPBk?w=400&h=300&fit=crop" class="card-img-top" alt="SPA маникюр">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">SPA маникюр</h5>
+                        <p class="card-text">Маникюр с питательными ванночками и массажем</p>
+                        <div class="mb-2">
+                            <span class="badge bg-success fs-6">2500 руб.</span>
+                            <span class="badge bg-secondary ms-2">120 мин.</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        {% if session.role == 'client' %}
+                        <a href="{{ url_for('new_appointment') }}" class="btn btn-dark btn-sm">Записаться</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if session.role == 'client' %}
+        <div class="text-center mt-4">
+            <a href="{{ url_for('new_appointment') }}" class="btn btn-success btn-lg">Записаться на услугу</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

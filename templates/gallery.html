@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-5">Галерея наших работ</h1>
+    
+    <div class="row">
+        <!-- Примеры маникюра -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1610998342128-4c64f87a1cb1?w=400&h=400&fit=crop" class="card-img-top" alt="Французский маникюр">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Французский маникюр</h5>
+                    <p class="text-muted">Элегантный и классический стиль</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1607778833979-4a87ab7b5a53?w=400&h=400&fit=crop" class="card-img-top" alt="Геометрический дизайн">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Геометрический дизайн</h5>
+                    <p class="text-muted">Современные геометрические узоры</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=400&h=400&fit=crop" class="card-img-top" alt="Свадебный маникюр">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Свадебный маникюр</h5>
+                    <p class="text-muted">Нежный дизайн для особого дня</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop" class="card-img-top" alt="Художественная роспись">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Художественная роспись</h5>
+                    <p class="text-muted">Ручная роспись с детализацией</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1577095769062-e79bf7576c2a?w=400&h=400&fit=crop" class="card-img-top" alt="Аппаратный маникюр">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Аппаратный маникюр</h5>
+                    <p class="text-muted">Профессиональная обработка</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1598437377527-0bf172TPBk?w=400&h=400&fit=crop" class="card-img-top" alt="SPA маникюр">
+                <div class="card-body text-center">
+                    <h5 class="card-title">SPA маникюр</h5>
+                    <p class="text-muted">Расслабляющий уход за руками</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <h4>Вдохновились нашими работами?</h4>
+        <p class="lead">Запишитесь на консультацию и создадим такой же дизайн для вас!</p>
+        {% if not session.user_id %}
+        <a href="{{ url_for('book_now') }}" class="btn btn-primary btn-lg">Записаться на консультацию</a>
+        {% else %}
+        <a href="{{ url_for('new_appointment') }}" class="btn btn-primary btn-lg">Записаться на услугу</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

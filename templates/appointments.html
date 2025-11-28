@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Все записи</h2>
+        
+        <div class="card">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Список записей</h5>
+                <span class="badge bg-light text-primary">{{ appointments|length }} записей</span>
+            </div>
+            <div class="card-body">
+                {% if appointments %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                {% if session.role in ['admin', 'master'] %}
+                                <th>Клиент</th>
+                                {% endif %}
+                                {% if session.role in ['admin', 'client'] %}
+                                <th>Мастер</th>
+                                {% endif %}
+                                <th>Услуга</th>
+                                <th>Дата</th>
+                                <th>Время</th>
+                                <th>Статус</th>
+                                <th>Цена</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in appointments %}
+                            <tr>
+                                <td>{{ appointment.id }}</td>
+                                {% if session.role in ['admin', 'master'] %}
+                                <td>
+                                    <strong>{{ appointment.client_name }}</strong>
+                                    {% if appointment.notes %}
+                                    <br><small class="text-muted" title="{{ appointment.notes }}">📝 Есть заметки</small>
+                                    {% endif %}
+                                </td>
+                                {% endif %}
+                                {% if session.role in ['admin', 'client'] %}
+                                <td>{{ appointment.master_name }}</td>
+                                {% endif %}
+                                <td>{{ appointment.service_name }}</td>
+                                <td>
+                                    <strong>{{ appointment.appointment_date }}</strong>
+                                    {% set appointment_date = appointment.appointment_date %}
+                                    {% set today = today %}
+                                    {% if appointment_date == today %}
+                                    <br><span class="badge bg-info">Сегодня</span>
+                                    {% elif appointment_date < today %}
+                                    <br><span class="badge bg-secondary">Прошедшая</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ appointment.appointment_time }}</td>
+                                <td>
+                                    <span class="badge bg-{% if appointment.status == 'completed' %}success{% elif appointment.status == 'cancelled' %}danger{% else %}warning{% endif %}">
+                                        {% if appointment.status == 'pending' %}ожидание{% elif appointment.status == 'completed' %}выполнено{% else %}отменено{% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <strong>{{ appointment.price }} руб.</strong>
+                                </td>
+                                <td>
+                                    {% if appointment.status == 'pending' %}
+                                        <div class="btn-group btn-group-sm">
+                                            {% if session.role in ['admin', 'client'] %}
+                                            <a href="{{ url_for('cancel_appointment', appointment_id=appointment.id) }}" 
+                                               class="btn btn-outline-danger" 
+                                               onclick="return confirm('Вы уверены, что хотите отменить запись?')">
+                                                Отменить
+                                            </a>
+                                            {% endif %}
+                                            {% if session.role in ['admin', 'master'] %}
+                                            <a href="{{ url_for('complete_appointment', appointment_id=appointment.id) }}" 
+                                               class="btn btn-outline-success"
+                                               onclick="return confirm('Отметить запись как выполненную?')">
+                                                Выполнено
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <div class="text-muted">
+                        <h5>Записей пока нет</h5>
+                        <p>
+                            {% if session.role == 'client' %}
+                            <a href="{{ url_for('new_appointment') }}" class="btn btn-success">Создать первую запись</a>
+                            {% else %}
+                            Записи появятся здесь, когда клиенты начнут записываться
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Статистика -->
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">{{ appointments|length }}</h3>
+                        <p class="card-text">Всего записей</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">
+                            {% set pending = appointments|selectattr('status', 'equalto', 'pending')|list %}
+                            {{ pending|length }}
+                        </h3>
+                        <p class="card-text">Ожидают</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">
+                            {% set completed = appointments|selectattr('status', 'equalto', 'completed')|list %}
+                            {{ completed|length }}
+                        </h3>
+                        <p class="card-text">Выполнено</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-danger">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">
+                            {% set cancelled = appointments|selectattr('status', 'equalto', 'cancelled')|list %}
+                            {{ cancelled|length }}
+                        </h3>
+                        <p class="card-text">Отменено</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

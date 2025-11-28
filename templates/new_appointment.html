@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>Новая запись на услугу</h2>
+        
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Заполните форму записи</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="master_id" class="form-label">Выберите мастера:</label>
+                                <select class="form-select" id="master_id" name="master_id" required>
+                                    <option value="">Выберите мастера</option>
+                                    {% for master in masters %}
+                                    <option value="{{ master.id }}">{{ master.full_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="service_id" class="form-label">Выберите услугу:</label>
+                                <select class="form-select" id="service_id" name="service_id" required>
+                                    <option value="">Выберите услугу</option>
+                                    {% for service in services %}
+                                    <option value="{{ service.id }}" data-duration="{{ service.duration }}">
+                                        {{ service.name }} - {{ service.price }} руб. ({{ service.duration }} мин.)
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="appointment_date" class="form-label">Дата записи:</label>
+                                <input type="date" class="form-control" id="appointment_date" name="appointment_date" 
+                                       min="{{ today }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="appointment_time" class="form-label">Время записи:</label>
+                                <select class="form-select" id="appointment_time" name="appointment_time" required>
+                                    <option value="">Выберите время</option>
+                                    {% for hour in range(10, 21) %}
+                                    <option value="{{ hour }}:00">{{ hour }}:00</option>
+                                    <option value="{{ hour }}:30">{{ hour }}:30</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Дополнительные пожелания:</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3" 
+                                  placeholder="Укажите дополнительные пожелания, цвет лака, особенности и т.д."></textarea>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6>📋 Информация о записи:</h6>
+                        <div id="service-info" class="text-muted">Выберите услугу, чтобы увидеть подробности</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success w-100 py-2">Записаться на услугу</button>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary w-100 mt-2">Отмена</a>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header bg-light">
+                <h6 class="mb-0">🕒 Часы работы салона</h6>
+            </div>
+            <div class="card-body">
+                <p class="mb-1"><strong>Пн-Пт:</strong> 10:00 - 21:00</p>
+                <p class="mb-1"><strong>Сб-Вс:</strong> 10:00 - 20:00</p>
+                <p class="mb-0 text-muted">Запись доступна за 30 минут до закрытия</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const serviceSelect = document.getElementById('service_id');
+    const serviceInfo = document.getElementById('service-info');
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Устанавливаем минимальную дату как сегодня
+    document.getElementById('appointment_date').min = today;
+    
+    // Обновляем информацию об услуге при выборе
+    serviceSelect.addEventListener('change', function() {
+        const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+        if (selectedOption.value) {
+            const serviceName = selectedOption.text.split(' - ')[0];
+            const duration = selectedOption.getAttribute('data-duration');
+            serviceInfo.innerHTML = `
+                <strong>Услуга:</strong> ${serviceName}<br>
+                <strong>Продолжительность:</strong> ${duration} минут<br>
+                <strong>Рекомендуем:</strong> Приходите за 10-15 минут до записи
+            `;
+        } else {
+            serviceInfo.innerHTML = 'Выберите услугу, чтобы увидеть подробности';
+        }
+    });
+});
+</script>
+{% endblock %}

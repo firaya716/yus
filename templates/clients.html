@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Клиенты салона</h2>
+        
+        <div class="card">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Список клиентов</h5>
+                <span class="badge bg-light text-primary">{{ clients|length }} клиентов</span>
+            </div>
+            <div class="card-body">
+                {% if clients %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ФИО</th>
+                                <th>Имя пользователя</th>
+                                <th>Телефон</th>
+                                <th>Email</th>
+                                <th>Дата регистрации</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for client in clients %}
+                            <tr>
+                                <td>{{ client.id }}</td>
+                                <td>
+                                    <strong>{{ client.full_name }}</strong>
+                                </td>
+                                <td>{{ client.username }}</td>
+                                <td>
+                                    {% if client.phone %}
+                                    {{ client.phone }}
+                                    {% else %}
+                                    <span class="text-muted">Не указан</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if client.email %}
+                                    {{ client.email }}
+                                    {% else %}
+                                    <span class="text-muted">Не указан</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small class="text-muted">Зарегистрирован</small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <div class="text-muted">
+                        <h5>Клиентов пока нет</h5>
+                        <p>Клиенты появятся здесь после регистрации на сайте</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card text-white bg-success">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">{{ clients|length }}</h3>
+                        <p class="card-text">Всего клиентов</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-info">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">
+                            {% set clients_with_phone = clients|selectattr('phone')|list %}
+                            {{ clients_with_phone|length }}
+                        </h3>
+                        <p class="card-text">С указанным телефоном</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-warning">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">
+                            {% set clients_with_email = clients|selectattr('email')|list %}
+                            {{ clients_with_email|length }}
+                        </h3>
+                        <p class="card-text">С указанной почтой</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
